@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý lịch dạy kèm </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="../style.css/main.css"> 
+    <link rel="stylesheet" href="../style.css/schedule.css">
+    <script defer src="../script.js/main.js"></script>
+
+    <script>
+        (function() {
+            const userRole = localStorage.getItem('hcmut_role') || 'guest';
+            const isLoggedIn = localStorage.getItem('hcmut_logged_in') === 'true';
+            if (!isLoggedIn || userRole === 'guest') {
+                window.location.href = 'login.html?next=schedule.html'; 
+                return;
+            }
+        })();
+    </script>
+    
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="../images/hcmut.png" alt="BK Logo" />
+        </div>
+        <nav class="nav-links">
+      <a href="main.html">Trang chủ</a>
+      <a class="register-link" href="program.html">Đăng kí chương trình</a>
+      <a class="register-link" href="schedule.html">Quản lý lịch</a>
+      <a class="register-link" href="accmanage.html">Quản lý tài khoản</a>
+      <!-- <a class="register-link" href="library.html">HCMUT_LIBRARY</a> -->
+    </nav>
+        <div class="user-icons">
+            <button class="bell-button" aria-label="Thông báo" title="Thông báo" aria-pressed="false">
+                <svg class="bell-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18.6 14.6V11a6 6 0 1 0-12 0v3.6c0 .538-.214 1.055-.595 1.395L4 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span class="visually-hidden">Thông báo</span>
+            </button>
+            <button class="avatar-button sso-button" aria-label="HCMUT SSO" title="HCMUT SSO" aria-expanded="false">
+                <span class="sso-box">HCMUT_SSO</span>
+            </button>
+        </div>
+    </header>
+    <div class="app-header-old bg-white">
+        <div class="app-logo-text">
+            <i class="fas fa-graduation-cap"></i>
+            <div>
+                <h5>Quản lý lịch dạy kèm</h5>
+                <small id="header-subtitle">Đặt lịch học với tutor</small> 
+            </div>
+        </div>
+        <div class="user-roles-old">
+            <div id="role-buttons-container">
+                <button class="btn btn-primary" id="btn-tutor"><i class="fas fa-chalkboard-teacher me-1"></i> Tutor</button>
+                <button class="btn btn-outline-primary" id="btn-student"><i class="fas fa-user-graduate me-1"></i> Sinh viên</button>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        
+        <div id="tutor-consultation-list" class="page-view" style="display: none;"> 
+            <div class="d-flex justify-content-center mb-4">
+                <div class="nav-tabs-custom-vertical">
+                    <button class="nav-link active active-blue" onclick="showTutorConsultation()">
+                        <i class="far fa-calendar-check me-2"></i> Buổi tư vấn
+                    </button>
+                    <button class="nav-link" onclick="showTutorAvailability()">
+                        <i class="far fa-clock me-2"></i> Lịch rảnh
+                    </button>
+                </div>
+            </div>
+
+            <div class="card p-4">
+                <h6 class="mb-3 text-muted">Danh sách buổi tư vấn</h6>
+                <p class="small text-secondary mb-4">Quản lý và theo dõi các buổi tư vấn của bạn</p>
+                
+                <div id="tutor-consultations-container">
+                    </div>
+            </div>
+        </div>
+
+        <div id="tutor-availability" class="page-view" style="display: none;">
+            <div class="d-flex justify-content-center mb-4">
+                <div class="nav-tabs-custom-vertical">
+                    <button class="nav-link" onclick="showTutorConsultation()">
+                        <i class="far fa-calendar-check me-2"></i> Buổi tư vấn
+                    </button>
+                    <button class="nav-link active active-blue" onclick="showTutorAvailability()">
+                        <i class="far fa-clock me-2"></i> Lịch rảnh
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card p-3 calendar-container">
+                        <h6 class="mb-3">Chọn ngày</h6>
+                        <p class="small text-secondary mb-3">Chọn ngày để thêm hoặc xem lịch rảnh</p>
+                        <div class="card-body">
+                            <div class="calendar-header mb-2">
+                                <i id="tutor-cal-prev" class="fas fa-chevron-left text-muted" role="button"></i>
+                                <div class="d-flex align-items-center gap-2">
+                                    <select id="tutor-cal-month" class="form-select form-select-sm"></select>
+                                    <select id="tutor-cal-year" class="form-select form-select-sm"></select>
+                                    <span id="tutor-cal-title" class="ms-2 small text-muted"></span>
+                                </div>
+                                <i id="tutor-cal-next" class="fas fa-chevron-right text-muted" role="button"></i>
+                            </div>
+                            <div class="calendar-grid" id="tutor-calendar-grid">
+                                <!-- dynamic calendar will render here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0">Lịch rảnh <span class="text-muted small">27/10/2025</span></h6>
+                            <button class="btn-add-timeslot" onclick="addTimeSlot()">
+                                <i class="fas fa-plus me-1"></i> Thêm khung giờ
+                            </button>
+                        </div>
+                        
+                        <div id="tutor-availability-slots-container">
+                             </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="student-booking" class="page-view" style="display: block;">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card p-3 calendar-container mb-4">
+                        <h6 class="mb-3">Chọn ngày</h6>
+                        <p class="small text-secondary mb-3">Chọn ngày để xem lịch rảnh của tutor</p>
+                        <div class="card-body">
+                            <div class="calendar-header mb-2">
+                                    <i id="student-cal-prev" class="fas fa-chevron-left text-muted" role="button"></i>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <select id="student-cal-month" class="form-select form-select-sm"></select>
+                                        <select id="student-cal-year" class="form-select form-select-sm"></select>
+                                        <span id="student-cal-title" class="ms-2 small text-muted"></span>
+                                    </div>
+                                    <i id="student-cal-next" class="fas fa-chevron-right text-muted" role="button"></i>
+                            </div>
+                            <div class="calendar-grid" id="student-calendar-grid">
+                                <!-- dynamic calendar will render here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-4 mb-4" id="student-upcoming-card">
+                        <h6 class="mb-3">Buổi học sắp tới</h6>
+                        <p class="small text-secondary mb-3">Các buổi tư vấn bạn đã đặt</p>
+                        <div id="student-upcoming-consultations-container">
+                             </div>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="card p-4 mb-4" id="student-available-slots-card">
+                        <h6 class="mb-3">Khung giờ có sẵn <span class="text-muted small">27/10/2025</span></h6>
+                        <div id="student-available-slots-container">
+                             </div>
+                    </div>
+
+                    <div class="card p-4" id="student-history-card">
+                        <h6 class="mb-3">Lịch sử</h6>
+                        <p class="small text-secondary mb-3">Các buổi học đã hoàn thành hoặc đã hủy</p>
+
+                        <div id="student-history-container">
+                             </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmConsultationModal" tabindex="-1" aria-labelledby="confirmConsultationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="confirmConsultationModalLabel">Xác nhận buổi tư vấn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-1 pb-4">
+                    <p class="mb-4">Bạn có chắc muốn xác nhận buổi tư vấn với <strong id="confirmConsultationStudentName">Nguyễn Văn A</strong>?</p>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="finalConfirmConsultationBtn">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cancelConsultationModal" tabindex="-1" aria-labelledby="cancelConsultationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-danger" id="cancelConsultationModalLabel">Hủy buổi tư vấn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-1 pb-4">
+                    <p class="mb-4">Bạn có chắc muốn hủy buổi tư vấn với <strong id="cancelConsultationStudentName">Trần Thị B</strong>? Thao tác này không thể hoàn tác.</p>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-danger" id="finalCancelConsultationBtn">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmStudentBookingModal" tabindex="-1" aria-labelledby="confirmStudentBookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="confirmStudentBookingModalLabel">Xác nhận đặt lịch</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-1 pb-4">
+                        <p class="mb-2">Bạn có chắc muốn đặt lịch cho khung giờ <strong id="confirmStudentBookingTime">09:00 - 10:00</strong>?</p>
+                        <p class="mb-2">Môn học: <strong id="confirmStudentBookingSubject">Toán học</strong></p>
+                    <div class="mb-3">
+                        <label for="confirmStudentBookingSubjectInput" class="form-label small">Môn học</label>
+                        <select id="confirmStudentBookingSubjectInput" class="form-select form-select-sm">
+                            <option>Toán học</option>
+                            <option>Tiếng Anh</option>
+                            <option>Lập trình C++</option>
+                            <option>Lập trình Python</option>
+                            <option>Vật lý đại cương</option>
+                        </select>
+                    </div>
+                    <p class="text-muted small">Buổi học sẽ ở trạng thái 'Chờ xác nhận' cho đến khi Tutor đồng ý.</p>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="finalConfirmStudentBookingBtn">Đặt lịch</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cancelStudentBookingModal" tabindex="-1" aria-labelledby="cancelStudentBookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title text-danger" id="cancelStudentBookingModalLabel">Hủy buổi học</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-1 pb-4">
+                    <p class="mb-4">Bạn có chắc muốn hủy buổi học <strong id="cancelStudentBookingSubject">Toán học</strong>? Khung giờ sẽ được trả lại cho Tutor.</p>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-danger" id="finalCancelStudentBookingBtn">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="addTimeSlotModal" tabindex="-1" aria-labelledby="addTimeSlotModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTimeSlotModalLabel">Thêm khung giờ rảnh</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small" id="modal-subtitle">Thêm khung giờ rảnh cho ngày 27/10/2025</p>
+                    <form id="timeSlotForm">
+                        <div class="mb-3">
+                            <label for="startTimeHour" class="form-label">Giờ bắt đầu</label>
+                            <div class="time-input-group">
+                                <input type="tel" class="form-control time-hour" id="startTimeHour" maxlength="2" placeholder="HH" required>
+                                <span class="time-separator">:</span>
+                                <input type="tel" class="form-control time-minute" id="startTimeMinute" maxlength="2" placeholder="MM" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endTimeHour" class="form-label">Giờ kết thúc</label>
+                            <div class="time-input-group">
+                                <input type="tel" class="form-control time-hour" id="endTimeHour" maxlength="2" placeholder="HH" required>
+                                <span class="time-separator">:</span>
+                                <input type="tel" class="form-control time-minute" id="endTimeMinute" maxlength="2" placeholder="MM" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-end border-0">
+                    <button type="button" class="btn btn-primary" onclick="handleAddTimeSlot()">Thêm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addNoteModalLabel">Ghi chú kết quả buổi tư vấn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Ghi chú này sẽ được lưu vào lịch sử buổi tư vấn.</p>
+                    <div class="mb-3">
+                        <label for="consultationNote" class="form-label">Ghi chú</label>
+                        <textarea id="consultationNote" class="form-control" rows="5" placeholder="Nhập ghi chú, kết quả, tài liệu tham khảo..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-end border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="finalSaveNoteBtn">Lưu ghi chú</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeConsultationModal" tabindex="-1" aria-labelledby="changeConsultationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeConsultationModalLabel">Thay đổi buổi tư vấn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Chọn ngày và khung giờ mới. Hệ thống sẽ gửi yêu cầu xác nhận cho sinh viên.</p>
+                    <div class="mb-3">
+                        <label for="changeDate" class="form-label">Ngày</label>
+                        <input type="date" id="changeDate" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Giờ bắt đầu - Giờ kết thúc</label>
+                        <div class="time-input-group">
+                            <input type="time" id="changeStartTime" class="form-control">
+                            <span class="time-separator"> - </span>
+                            <input type="time" id="changeEndTime" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-end border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="finalChangeConsultationBtn">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="../script.js/main.js"></script>
+    <script defer src="../script.js/schedule.js"></script>
+</body>
+</html>

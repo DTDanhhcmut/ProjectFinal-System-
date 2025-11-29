@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng ký chương trình Tutor - dành cho sinh viên</title>
+  <link rel="stylesheet" href="../style.css/main.css" />
+  <link rel="stylesheet" href="../style.css/chatbot.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+  <script defer src="../script.js/main.js"></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">
+      <img src="../images/hcmut.png" alt="BK Logo" />
+    </div>
+    <nav class="nav-links">
+      <a href="main.html">Trang chủ</a>
+      <a class="register-link" href="program.html">Đăng kí chương trình</a>
+      <a class="register-link" href="schedule.html">Quản lý lịch</a>
+      <a class="register-link" href="accmanage.html">Quản lý tài khoản</a>
+      <!-- <a class="register-link" href="library.html">HCMUT_LIBRARY</a> -->
+    </nav>
+    <div class="user-icons">
+      <button class="bell-button" aria-label="Thông báo" title="Thông báo" aria-pressed="false">
+        <svg class="bell-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18.6 14.6V11a6 6 0 1 0-12 0v3.6c0 .538-.214 1.055-.595 1.395L4 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="visually-hidden">Thông báo</span>
+      </button>
+      <button class="avatar-button sso-button" aria-label="HCMUT SSO" title="HCMUT SSO" aria-expanded="false">
+        <span class="sso-box">HCMUT_SSO</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Tiêu đề-->
+  <section class="program-hero" style="padding:40px 20px; background:linear-gradient(135deg, #0b72a8 0%, #0a84d6 100%);">
+    <div class="container" style="max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:40px;">
+      
+      <div style="flex:1; color:white;">
+        <h1 style="font-size:36px; font-weight:700; margin-bottom:12px; color:white;">
+          Kết nối <span style="color:#ffd700;">học viên</span> và <span style="color:#ffd700;">gia sư</span>
+        </h1>
+        <p class="lead" style="font-size:18px; color:rgba(255,255,255,0.95); margin-bottom:0;">
+          Hệ thống hỗ trợ tìm gia sư phù hợp hoặc chia sẻ kiến thức của bạn.
+        </p>
+      </div>
+  
+      <div style="flex:0 0 auto; text-align:center;">
+        <img src="../images/dangkichuongtrinh.png" alt="illustration"
+          style="width:260px; height:auto; border-radius:14px; opacity:0.98; box-shadow:0 6px 14px rgba(0,0,0,0.25);" />
+      </div>
+  
+    </div>
+  </section>
+  <!-- Bộ lọc tìm kiếm gia sư -->
+  <section class="tutor-section" style="padding:40px 20px; background:#f8f9fa;">
+    <div class="container" style="max-width:1200px; margin:0 auto;">
+      <div style="background:white; border:2px solid #0b72a8; border-radius:12px; padding:32px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+        <div class="tutor-header" style="margin-bottom:24px;">
+          <h2 style="color:#0b72a8; margin-bottom:8px; font-size:28px;">Tìm kiếm gia sư</h2>
+          <p class="muted" style="color:#666;">Sử dụng bộ lọc để tìm gia sư phù hợp với nhu cầu của bạn.</p>
+        </div>
+
+        <div id="tutor-area" class="tutor-area">
+          <!-- Thông báo chưa đăng nhập -->
+          <div id="tutor-not-logged-in" class="tutor-alert" style="display:none; padding:20px; background:#fff3cd; border:1px solid #ffc107; border-radius:8px; color:#856404; margin-bottom:20px; text-align:center;">
+            <p style="margin:0 0 12px 0; font-size:16px; font-weight:600;">⚠️ Bạn cần đăng nhập</p>
+            <p style="margin:0 0 16px 0;">Vui lòng đăng nhập với vai trò Sinh viên để sử dụng tính năng này.</p>
+            <button onclick="location.href='role.html?next=program.html'" style="padding:10px 24px; background:#0b72a8; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600;">Đăng nhập</button>
+          </div>
+
+          <!-- Bộ lọc tìm kiếm -->
+          <div style="margin-bottom:32px; background:white; border:3px solid #0b72a8; border-radius:12px; padding:28px; box-shadow:0 4px 16px rgba(11, 114, 168, 0.15);">
+            <div style="margin-bottom:20px; padding-bottom:16px; border-bottom:2px solid #e9ecef;">
+            </div>
+            <form id="tutor-filter-form" class="tutor-filters" style="display:block; gap:20px;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-bottom:20px;">
+                <label style="flex:1;">
+                  <strong style="display:block; margin-bottom:10px; color:#333; font-size:15px; font-weight:600;">📚 Khoa</strong>
+                  <select id="filter-dept" style="width:100%; padding:14px; border:2px solid #ddd; border-radius:8px; font-size:15px; transition:border-color 0.3s;" onfocus="this.style.borderColor='#0b72a8'" onblur="this.style.borderColor='#ddd'">
+                    <option value="">-- Tất cả --</option>
+                    <option value="Cơ khí">Cơ khí</option>
+                    <option value="Kỹ thuật địa chất và dầu khí">Kỹ thuật địa chất và dầu khí</option>
+                    <option value="Điện - Điện tử">Điện - Điện tử</option>
+                    <option value="Kỹ thuật giao thông">Kỹ thuật giao thông</option>
+                    <option value="Kỹ thuật hóa học">Kỹ thuật hóa học</option>
+                    <option value="Môi trường và tài nguyên">Môi trường và tài nguyên</option>
+                    <option value="Khoa học và kỹ thuật máy tính">Khoa học và kỹ thuật máy tính</option>
+                    <option value="Quản lý công nghiệp">Quản lý công nghiệp</option> 
+                    <option value="Khoa học ứng dụng">Khoa học ứng dụng</option> 
+                    <option value="Công nghệ vật liệu">Công nghệ vật liệu</option>
+                    <option value="Xây dựng">Xây dựng</option>
+                  </select>
+                </label>
+                <label style="flex:1;">
+                  <strong style="display:block; margin-bottom:10px; color:#333; font-size:15px; font-weight:600;">📖 Môn học</strong>
+                  <select id="filter-subject" style="width:100%; padding:14px; border:2px solid #ddd; border-radius:8px; font-size:15px; transition:border-color 0.3s;" onfocus="this.style.borderColor='#0b72a8'" onblur="this.style.borderColor='#ddd'">
+                    <option value="">-- Tất cả --</option>
+                    <option value="Lập trình C++">Lập trình C++</option>
+                    <option value="Cấu trúc dữ liệu">Cấu trúc dữ liệu</option>
+                    <option value="Lập trình Python">Lập trình Python</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                    <option value="Toán rời rạc">Toán rời rạc</option>
+                    <option value="Giải tích">Giải tích</option>
+                    <option value="Vật lý đại cương">Vật lý đại cương</option>
+                    <option value="Mạch điện">Mạch điện</option>
+                    <option value="Vi điều khiển">Vi điều khiển</option>
+                    <option value="Cơ học kết cấu">Cơ học kết cấu</option>
+                    <option value="Vật liệu xây dựng">Vật liệu xây dựng</option>
+                    <option value="Hóa học đại cương">Hóa học đại cương</option>
+                    <option value="Toán cao cấp">Toán cao cấp</option>
+                    <option value="Lập trình Java">Lập trình Java</option>
+                    <option value="Cơ sở dữ liệu">Cơ sở dữ liệu</option>
+                    <option value="Mạng máy tính">Mạng máy tính</option>
+                    <option value="Hệ điều hành">Hệ điều hành</option>
+                  </select>
+                </label>
+                <label style="flex:1;">
+                  <strong style="display:block; margin-bottom:10px; color:#333; font-size:15px; font-weight:600;">⏰ Thời gian</strong>
+                  <select id="filter-timeSlot" style="width:100%; padding:14px; border:2px solid #ddd; border-radius:8px; font-size:15px; transition:border-color 0.3s;" onfocus="this.style.borderColor='#0b72a8'" onblur="this.style.borderColor='#ddd'">
+                    <option value="">-- Tất cả --</option>
+                    <option value="2">Tiết 2 (7:00 - 7:50)</option>
+                    <option value="3">Tiết 3 (8:00 - 8:50)</option>
+                    <option value="4">Tiết 4 (9:00 - 9:50)</option>
+                    <option value="5">Tiết 5 (10:00 - 10:50)</option>
+                    <option value="6">Tiết 6 (11:00 - 11:50)</option>
+                    <option value="7">Tiết 7 (13:00 - 13:50)</option>
+                    <option value="8">Tiết 8 (14:00 - 14:50)</option>
+                    <option value="9">Tiết 9 (15:00 - 15:50)</option>
+                    <option value="10">Tiết 10 (16:00 - 16:50)</option>
+                    <option value="11">Tiết 11 (17:00 - 17:50)</option>
+                    <option value="12">Tiết 12 (18:00 - 18:50)</option>
+                    <option value="13">Tiết 13 (19:00 - 19:50)</option>
+                  </select>
+                </label>
+              </div>
+              <div class="filter-actions" style="display:flex; gap:12px; align-items:center; padding-top:8px; border-top:2px solid #e9ecef;">
+                <button id="filter-btn" type="button" class="btn-filter" style="flex:1; padding:14px 28px; background:linear-gradient(135deg, #0b72a8 0%, #0a84d6 100%); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:16px; box-shadow:0 4px 12px rgba(11, 114, 168, 0.3); transition:transform 0.2s, box-shadow 0.2s;" onmouseenter="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(11, 114, 168, 0.4)'" onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(11, 114, 168, 0.3)'">🔍 Tìm gia sư</button>
+                <button id="clear-filter-btn" type="button" class="btn-clear" style="padding:14px 28px; background:#6c757d; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600; font-size:16px; transition:background 0.2s;" onmouseenter="this.style.background='#5a6268'" onmouseleave="this.style.background='#6c757d'">🔄 Xóa bộ lọc</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Danh sách gia sư -->
+          <div id="tutor-list" class="tutor-list" aria-live="polite" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:24px; margin-top:24px;"></div>
+          <div id="tutor-empty" class="tutor-empty" style="display:none; padding:40px; text-align:center; color:#666; background:#fff3cd; border:1px solid #ffc107; border-radius:8px;">
+            <p style="font-size:18px; margin:0; color:#856404; font-weight:600;">Không có gia sư phù hợp với tiêu chí tìm kiếm.</p>
+            <p style="font-size:14px; margin-top:8px; color:#999;">Vui lòng thử điều chỉnh bộ lọc hoặc xóa bộ lọc để xem tất cả gia sư.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <button id="chatbot-toggler">
+    <span class="material-symbols-rounded">chat</span>
+    <span class="material-symbols-rounded">close</span>
+</button>
+<div class="chatbot-popup">
+    <div class="chat-header">
+        <div class="header-info">
+            <svg class="chatbot-logo"xmls="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 5.92 2 10.5C2 13.39 4.03 15.91 7 17.11V22L11.11 19.56C11.74 19.78 12.36 19.89 13 19.89C18.52 19.89 23 16.97 23 12.39C23 7.81 18.52 4.89 13 4.89C12.36 4.89 11.74 5 11.11 5.22C10.48 3.34 9.3 2 8 2H12Z" fill="#0b72a8"/>
+            </svg>
+            <h2 class="logo-text">Chatbot</h2>
+        </div>
+            <button id="close-chatbot" class="material-symbols-rounded">keyboard_arrow_down</button>
+        </div>
+    <div class="chat-body">
+        <div class="messages">
+            <svg class="bot-avt" xmls="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 5.92 2 10.5C2 13.39 4.03 15.91 7 17.11V22L11.11 19.56C11.74 19.78 12.36 19.89 13 19.89C18.52 19.89 23 16.97 23 12.39C23 7.81 18.52 4.89 13 4.89C12.36 4.89 11.74 5 11.11 5.22C10.48 3.34 9.3 2 8 2H12Z" fill="#0b72a8"/>
+            </svg>
+            <div class="message-text"> Xin chào! <br />Tôi có thể giúp gì cho bạn.
+            </div>
+        </div>  
+    </div>
+
+<div class="chat-footer">
+        <form action="#" class="chat-form">
+            <textarea placeholder="Hỏi gì đó..." class="message-input" required></textarea>
+            <div class="chat-controls">
+                <button type="submit" id="send-mess"
+                class="material-symbols-rounded">arrow_upward</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="../script.js/chatbot.js"></script>
+</html>

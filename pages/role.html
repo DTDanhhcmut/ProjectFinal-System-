@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng ký / Đăng nhập - HCMUT_SSO</title>
+  <link rel="stylesheet" href="../style.css/main.css" />
+  <script src="../pagesforadmin/datacore.js"></script>
+  <style>
+    body { background: linear-gradient(90deg,#f3f7fa,#eef3f6); }
+    .card-center { max-width:520px; margin:60px auto; background:white; border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,0.08); padding:32px; text-align:center; }
+    .card-center img.logo { width:120px; height:auto; margin-bottom:18px; }
+    .signup-title { color:#0b72a8; font-weight:600; margin-bottom:12px; }
+    .signup-sub { color:#2b6b8a; margin-bottom:18px; }
+    .method-btn { display:block; width:100%; padding:12px; border-radius:6px; border:1px solid #e6eef3; background:white; color:#0b72a8; margin-bottom:12px; cursor:pointer; font-weight:600; }
+    .method-btn.admin { background:#f8fafc; color:#0b4f6a; }
+    .footer-row { display:flex; justify-content:space-between; align-items:center; margin-top:18px; }
+    .cancel { background:transparent;border:none;color:#0b72a8;cursor:pointer; }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    .modal.show {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #2b6b8a;
+      font-weight: 500;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e6eef3;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #0b72a8;
+      box-shadow: 0 0 0 2px rgba(11,114,168,0.1);
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .btn-close {
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .btn-register {
+      background: #0b72a8;
+      color: white;
+    }
+    .modal-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-center">
+    <img src="../images/hcmut.png" alt="logo" class="logo" />
+    <h2 class="signup-title">Đăng nhập bằng tài khoản của bạn</h2>
+    <p class="signup-sub">Chọn phương thức đăng nhập.</p>
+
+    <button id="btn-hcmut" class="method-btn">Tài khoản HCMUT (Sinh viên)</button>
+    <button id="btn-tutor" class="method-btn tutor">Tài khoản Tutor</button>
+    <button id="btn-pdt" class="method-btn admin">Phòng Đào Tạo</button>
+    <button id="btn-ctsv" class="method-btn admin">Phòng Công tác Sinh viên</button>
+
+    <div class="footer-row">
+      <div>
+        <select id="lang-select">
+          <option value="vi">Vietnamese (vi)</option>
+          <option value="en">English (en)</option>
+        </select>
+      </div>
+      <div>
+        <button id="btn-cookies" class="method-btn" style="display:inline-block;width:auto;padding:8px 12px;">Chưa có tài khoản?</button>
+        <button id="btn-cancel" class="cancel">Hủy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Đăng ký -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <h2 class="signup-title">Đăng ký tài khoản</h2>
+      <p class="signup-sub">Vui lòng điền đầy đủ thông tin</p>
+      
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="registerRole">Vai trò</label>
+          <select id="registerRole" required>
+            <option value="">Chọn vai trò</option>
+            <option value="student">Sinh viên</option>
+            <option value="tutor">Tutor</option>
+            <option value="pdt">Phòng Đào Tạo</option>
+            <option value="ctsv">Phòng Công tác Sinh viên</option>  
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="registerUsername">Mã số / MSSV</label>
+          <input type="text" id="registerUsername" required placeholder="Nhập mã số hoặc MSSV">
+        </div>
+
+        <div class="form-group">
+          <label for="registerFullname">Họ và tên</label>
+          <input type="text" id="registerFullname" required placeholder="Nhập họ và tên">
+        </div>
+
+        <div class="form-group">
+          <label for="registerEmail">Email</label>
+          <input type="email" id="registerEmail" required placeholder="example@hcmut.edu.vn">
+        </div>
+
+        <div class="form-group">
+          <label for="registerPassword">Mật khẩu</label>
+          <input type="password" id="registerPassword" required placeholder="Nhập mật khẩu">
+        </div>
+
+        <div class="form-group">
+          <label for="registerConfirmPassword">Xác nhận mật khẩu</label>
+          <input type="password" id="registerConfirmPassword" required placeholder="Nhập lại mật khẩu">
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" class="btn-close" onclick="closeRegisterModal()">Đóng</button>
+          <button type="submit" class="btn-register">Đăng ký</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // get next from query and choose role -> redirect to HCMUT_SSO login UI
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const next = params.get('next') || 'main.html';
+
+      function chooseRole(role) {
+        try { localStorage.setItem('hcmut_role_pending', role); } catch (e) { console.warn(e); }
+        // redirect to the HCMUT SSO UI for credential input
+        location.href = 'login.html?next=' + encodeURIComponent(next);
+      }
+
+      document.getElementById('btn-hcmut').addEventListener('click', function () { chooseRole('student'); });
+      // tutor button (if exists)
+      const tutorBtn = document.getElementById('btn-tutor');
+      if (tutorBtn) tutorBtn.addEventListener('click', function () { chooseRole('tutor'); });
+      document.getElementById('btn-pdt').addEventListener('click', function () { chooseRole('pdt'); });
+      document.getElementById('btn-ctsv').addEventListener('click', function () { chooseRole('ctsv'); });
+      document.getElementById('btn-cancel').addEventListener('click', function () { location.href = 'main.html'; });
+      // Xử lý modal đăng ký
+      document.getElementById('btn-cookies').addEventListener('click', function() {
+        document.getElementById('registerModal').classList.add('show');
+      });
+
+      // Đóng modal đăng ký
+      window.closeRegisterModal = function() {
+        document.getElementById('registerModal').classList.remove('show');
+      }
+
+      // Xử lý form đăng ký
+      const registerForm = document.getElementById('registerForm');
+      if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const role = document.getElementById('registerRole').value;
+        const username = document.getElementById('registerUsername').value;
+        const fullname = document.getElementById('registerFullname').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+        // Kiểm tra mật khẩu khớp nhau
+        if (password !== confirmPassword) {
+          alert('Mật khẩu xác nhận không khớp!');
+          return;
+        }
+
+        // Kiểm tra email HCMUT
+        if (!email.endsWith('@hcmut.edu.vn')) {
+          alert('Vui lòng sử dụng email HCMUT!');
+          return;
+        }
+
+        // Lưu vào HCMUT_DATACORE thông qua datacore.js
+        try {
+          // Kiểm tra xem datacore.js đã load chưa
+          if (!window.HCMUT_DATACORE && !window.registerUser) {
+            console.error('HCMUT_DATACORE chưa được load. Kiểm tra đường dẫn script.');
+            alert('Lỗi: Hệ thống đăng ký chưa sẵn sàng! Vui lòng refresh trang và thử lại.');
+            return;
+          }
+
+          // Kiểm tra xem email đã được đăng ký chưa (sử dụng processed username)
+          const processedUsername = email.replace(/@hcmut\.edu\.vn$/, '');
+          const existingUsers = window.HCMUT_DATACORE ? window.HCMUT_DATACORE.users : [];
+          
+          if (existingUsers && existingUsers.some(u => u.username === processedUsername)) {
+            alert('Email này đã được đăng ký!');
+            return;
+          }
+
+          // Sử dụng hàm registerUser từ datacore.js để lưu vào HCMUT_DATACORE
+          if (window.registerUser) {
+            window.registerUser(email, password, role, fullname);
+            
+            // Lưu thêm thông tin bổ sung vào localStorage (nếu cần)
+            const additionalInfo = {
+              username: username, // MSSV
+              fullname: fullname,
+              email: email,
+              role: role,
+              createdAt: new Date().toISOString()
+            };
+            
+            const additionalData = JSON.parse(localStorage.getItem('user_additional_info') || '[]');
+            additionalData.push(additionalInfo);
+            localStorage.setItem('user_additional_info', JSON.stringify(additionalData));
+            
+            alert('Đăng ký thành công! Vui lòng đăng nhập.');
+            closeRegisterModal();
+            document.getElementById('registerForm').reset();
+          } else {
+            console.error('window.registerUser không tồn tại');
+            alert('Lỗi: Hệ thống đăng ký chưa sẵn sàng! Vui lòng refresh trang và thử lại.');
+          }
+        } catch (err) {
+          console.error('Lỗi khi đăng ký:', err);
+          alert('Có lỗi xảy ra khi đăng ký: ' + err.message + '. Vui lòng thử lại!');
+        }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

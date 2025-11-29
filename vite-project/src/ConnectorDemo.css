@@ -1,0 +1,362 @@
+/* ====== Base & Reset ====== */
+html, body, #root { height: 100%; }
+body { margin: 0; background: #f2f4f8; font-family: Inter, sans-serif; }
+
+:root{
+  --bg:#f6f8fb; --card:#ffffff; --text:#0f172a; --muted:#5b6474; --line:#e7ecf2;
+  --primary:#2f6fec; --primary-2:#1859df; --green:#16a34a; --red:#ef4444;
+}
+
+/* ====== Nút chuyển đổi User (Thêm mới) ====== */
+.user-toggle-btn {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--primary-2);
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  cursor: pointer;
+  font-weight: 600;
+}
+.user-toggle-btn:hover { background: var(--primary); }
+
+
+/* ====== Page scaffold ====== */
+.light-page{
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  flex-direction:column;
+}
+
+/* ====== Topbar ====== */
+.topbar{
+  height:64px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; gap:12px;
+  position:sticky; top:0; z-index:10;
+}
+.brand{ display:flex; align-items:center; gap:10px; font-weight:700; }
+.brand .dot{
+  width:10px; height:10px; border-radius:50%;
+  background:var(--primary);
+  box-shadow:0 0 0 3px rgba(47,111,236,.15);
+}
+.id-pill{
+  display:flex; align-items:center; gap:8px;
+  padding:6px 10px; border-radius:999px;
+  background:#f3f6ff; border:1px solid #dbe6ff;
+  color:#0b3db5; font-weight:600;
+}
+
+/* ====== Container (auto-fit & centered) ====== */
+.container{ width:min(1180px, calc(100% - 32px)); margin:20px auto; }
+
+/* ====== Panel ====== */
+.panel{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+.panel-hd{
+  display:flex; align-items:center; gap:10px;
+  padding:14px 16px; border-bottom:1px solid var(--line);
+}
+.panel-hd h2{ margin:0; font-size:18px; }
+.panel-hd.small{ padding:10px 14px; }
+.panel-hd.small h3{ margin:0; font-size:15px; }
+
+/* ====== Readonly ID row ====== */
+.idrow{ padding:14px 16px; border-bottom:1px solid var(--line); }
+.field{ display:flex; flex-direction:column; gap:6px; }
+.field > span{ font-size:12px; color:#6b7280; }
+.field input{
+  height:40px; padding:0 12px; border-radius:10px;
+  border:1px solid #d9e1ee; background:#fff; color:#111827;
+}
+.field input[disabled]{
+  background:#f8fafc; color:#667085;
+  border-color:#e6ebf5; cursor:not-allowed;
+}
+
+/* ====== Search bar (ĐÃ SỬA) ====== */
+.searchbar{
+  display:grid; gap:12px; padding:16px;
+  /* SỬA LỖI ĐÈ NHAU:
+    Chia grid làm 3 cột: 
+    - Cột 1 (từ khóa): tối thiểu 300px, chiếm 1.5 phần
+    - Cột 2 (môn học): tối thiểu 320px, chiếm 2 phần
+    - Cột 3 (nút): tự động
+    Thêm max-width để thanh search không bị giãn quá rộng
+  */
+  grid-template-columns: minmax(300px, 1.5fr) minmax(320px, 2fr) auto;
+  max-width: 1024px;
+}
+/* Sửa breakpoint để stack sớm hơn */
+@media (max-width: 860px){
+  .searchbar{ grid-template-columns: 1fr; }
+}
+
+.input-icon{ position:relative; }
+.input-icon svg{
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  color:#8a93a5;
+}
+.input-icon input{
+  width:100%; height:40px; padding:0 12px 0 36px;
+  border:1px solid #d9e1ee; border-radius:10px; background:#fff;
+  box-sizing: border-box; /* Thêm để padding không làm vỡ layout */
+}
+select{
+  height:40px; padding:0 12px;
+  border:1px solid #d9e1ee; border-radius:10px; background:#fff; color:#111827;
+  box-sizing: border-box; /* Thêm để padding không làm vỡ layout */
+}
+
+/* ====== Buttons ====== */
+.btn{
+  display:inline-flex; align-items:center; justify-content: center; gap:8px;
+  height:40px; padding:0 14px; border-radius:10px;
+  border:1px solid #cfd8ea; background:#fff; color:#0f172a; cursor:pointer;
+  font-weight: 500; /* Thêm */
+}
+.btn:hover{ background:#f5f8ff; }
+.btn:disabled{ opacity:.6; cursor:not-allowed; }
+.btn-primary{
+  background:linear-gradient(180deg, var(--primary), var(--primary-2));
+  color:#fff; border-color:#1859df; font-weight:600;
+}
+.btn-primary:hover{ filter:brightness(1.05); }
+.btn-ghost{ background:#fff; }
+.btn-done{
+  background:rgba(22,163,74,.12); color:#166534; border-color:#9fd9b2;
+}
+
+/* ====== Document list ====== */
+.doc-list{ list-style:none; margin:0; padding:0; }
+.doc{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:14px 16px; border-top:1px solid var(--line);
+}
+.doc:first-child{ border-top:none; }
+.doc:hover{ background:#fafcff; }
+.doc-main{ display:flex; align-items:center; gap:12px; min-width:0; }
+.thumb{
+  width:36px; height:36px; border-radius:10px;
+  display:grid; place-items:center;
+  background:#f4f7ff; color:#2f6fec; border:1px solid #dbe6ff;
+  flex-shrink: 0; /* Thêm */
+}
+/* Xóa .thumb-lock */
+.meta{ min-width: 0; /* Thêm */ }
+.meta .title{ 
+  font-weight:600; color:#0f172a; 
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* Thêm */
+}
+.meta .sub{
+  display:flex; align-items:center; flex-wrap: wrap; /* Thêm */ gap:8px;
+  color:#687182; font-size:13px; margin-top:3px;
+}
+/* Xóa .badge, thêm .badge-hidden */
+.badge-hidden{
+  background:#fef2f2; border:1px solid #fecaca;
+  color:#991b1b; padding:2px 6px; border-radius:6px; font-size:12px;
+}
+.doc-actions{ display:flex; gap:8px; flex-shrink:0; }
+
+/* ====== Attach list (ĐÃ SỬA) ====== */
+.panel-attach{ border-top:1px solid var(--line); }
+.empty{ text-align:center; padding:20px; color:#6b7280; }
+.empty.small{ padding:14px; }
+.attach-list{
+  list-style:none; margin:0; padding:8px 14px 16px; display:grid; gap:8px;
+}
+.attach-list li{
+  /* Sửa grid để thêm cột cho nút Xóa */
+  display:grid; grid-template-columns:16px 1fr auto 24px; 
+  gap:8px; align-items:center;
+  background:#f9fbff; border:1px solid #e2e9f8; border-radius:10px; padding:8px 10px;
+}
+.attach-list .t{ 
+  font-weight:600; color:#111827; margin-right:8px; 
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* Thêm */
+}
+.attach-list .s{ color:#6b7280; font-size:12.5px; }
+.note{ color:#6b7280; font-size:12.5px; padding:0 14px 14px; margin:0; /* Sửa */ }
+
+/* THÊM MỚI: Nút xóa đính kèm */
+.btn-remove-attach {
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+}
+.btn-remove-attach:hover {
+  background: #ffebeb;
+  color: var(--red);
+}
+
+
+/* ====== Footer ====== */
+.footer{ margin-top:auto; padding:16px; text-align:center; color:#6b7280; }
+
+/* ====== Toast ====== */
+.toast{
+  position:fixed; right:20px; bottom:20px;
+  display:flex; align-items:center; gap:8px;
+  background:#ffffff; border:1px solid #dbe3f3; border-radius:12px;
+  padding:10px 12px; box-shadow:0 10px 25px rgba(0,0,0,.08);
+  z-index:20; animation:fadein .2s ease-out;
+}
+.toast-success{ border-color:#a7e7bf; background:#f1fff6; }
+.toast-error{ border-color:#ffd3d3; background:#fff6f6; }
+.toast-info{ border-color:#c4d8ff; background:#f6f9ff; } /* Thêm */
+.toast-close{ border:0; background:transparent; color:#6b7280; cursor:pointer; font-size:16px; }
+.spin{ animation: spin 1s linear infinite; }
+@keyframes spin { to{ transform:rotate(360deg); } }
+@keyframes fadein { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+
+
+/* Navbar */
+.navbar {
+  background-color: #0077b6;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 40px;
+  color: white;
+  /* Dùng font Poppins cho riêng taskbar */
+  font-family: "Poppins", sans-serif; 
+}
+
+.navbar .logo img {
+  height: 40px;
+}
+
+.logo img {
+  height: 45px;        
+  width: auto;         
+  object-fit: contain; 
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: 500;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  margin-left: 18px; /* gap between logo and links */
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.user-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto; /* push user icons to the right */
+}
+
+/* Visually-hidden helper for accessibility */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Bell button styles */
+.bell-button {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  margin: 0;
+  cursor: pointer;
+  color: white; /* icon will use currentColor */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.bell-button .bell-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.bell-button:focus {
+  outline: 2px solid rgba(255,255,255,0.95);
+  outline-offset: 2px;
+}
+
+.bell-button.active {
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+}
+
+/* Make the avatar an accessible button */
+.avatar-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-button:focus {
+  outline: 2px solid rgba(255,255,255,0.9);
+  outline-offset: 2px;
+}
+
+.avatar-button.open {
+  box-shadow: 0 0 0 4px rgba(0,119,182,0.15);
+}
+
+.sso-button {
+  border-radius: 6px;
+  padding: 0;
+}
+
+.sso-box {
+  display: inline-block;
+  background: white; 
+  color: #0077b6;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  line-height: 1;
+}
+
+.sso-button:focus .sso-box,
+.sso-button:focus {
+  outline: 2px solid rgba(255,255,255,0.9);
+  outline-offset: 2px;
+}

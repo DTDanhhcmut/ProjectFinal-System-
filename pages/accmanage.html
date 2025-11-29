@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quản lí tài khoản - HCMUT</title>
+  <link rel="stylesheet" href="../style.css/accmanage.css" />
+  
+  <script defer src="../script.js/main.js"></script>
+  <script defer src="../script.js/accmanage.js"></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">
+      <img src="../images/hcmut.png" alt="BK Logo" />
+    </div>
+    <nav class="nav-links">
+      <a href="main.html">Trang chủ</a>
+      <a class="register-link" href="program.html">Đăng kí chương trình</a>
+      <a class="register-link" href="schedule.html">Quản lý lịch</a>
+      <a class="register-link" href="accmanage.html">Quản lý tài khoản</a>
+      <!-- <a class="register-link" href="library.html">HCMUT_LIBRARY</a> -->
+    </nav>
+    <div class="user-icons">
+      <button class="bell-button" aria-label="Thông báo" title="Thông báo" aria-pressed="false">
+        <svg class="bell-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18.6 14.6V11a6 6 0 1 0-12 0v3.6c0 .538-.214 1.055-.595 1.395L4 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="visually-hidden">Thông báo</span>
+      </button>
+      <button class="avatar-button sso-button" aria-label="HCMUT SSO" title="HCMUT SSO" aria-expanded="false">
+        <span class="sso-box">HCMUT_SSO</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="account-page-main">
+    <form id="account-form" class="account-card">
+      <div class="account-header">
+        <h1>Hồ sơ cá nhân</h1>
+        <p>Quản lý thông tin công khai và chi tiết liên hệ của bạn.</p>
+      </div>
+
+      <div id="account-result"></div>
+
+      <div class="account-avatar-section">
+        <img src="images/default-avatar.png" alt="Avatar preview" id="acc-avatar-preview" class="account-avatar-preview" />
+        <div class="account-avatar-controls">
+          <label class="btn-avatar-upload">
+            Tải ảnh mới
+            <input type="file" id="acc-avatar-input" accept="image/*" class="visually-hidden" />
+          </label>
+          <button type="button" id="acc-avatar-remove" class="btn-avatar-remove">Xóa ảnh</button>
+          <p class="avatar-note">PNG, JPG hoặc SVG. Tối đa 800Kb.</p>
+        </div>
+      </div>
+
+      <h2 class="form-section-title">Thông tin tài khoản</h2>
+      <div class="form-grid">
+        <div class="form-group form-group-full">
+          <label for="acc-username">Tên tài khoản (Username)</label>
+          <input type="text" id="acc-username" readonly disabled />
+        </div>
+        
+        <div class="form-group">
+          <label for="acc-role">Vai trò</label>
+          <input type="text" id="acc-role" readonly disabled />
+        </div>
+        
+        <div class="form-group">
+          <label for="acc-id-value" id="acc-id-label">Mã số</label>
+          <input type="text" id="acc-id-value" readonly disabled />
+        </div>
+        
+        <div class="form-group form-group-full">
+          <label for="acc-status">Trạng thái</label>
+          <input type="text" id="acc-status" readonly disabled />
+        </div>
+        </div>
+
+      <h2 class="form-section-title">Thông tin lý lịch</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="acc-fullname">Họ và Tên</label>
+          <input type="text" id="acc-fullname" placeholder="Nhập họ và tên của bạn" />
+        </div>
+        <div class="form-group">
+          <label for="acc-department">Khoa</label>
+          <select id="acc-department">
+            <option value="">-- Chọn khoa --</option>
+            <option value="Khoa học và kỹ thuật máy tính">Khoa học và kỹ thuật máy tính</option>
+            <option value="Cơ khí">Cơ khí</option>
+            <option value="Điện - Điện tử">Điện - Điện tử</option>
+            <option value="Kỹ thuật hóa học">Kỹ thuật hóa học</option>
+            <option value="Xây dựng">Xây dựng</option>
+            <option value="Quản lý công nghiệp">Quản lý công nghiệp</option>
+            <option value="Khoa học ứng dụng">Khoa học ứng dụng</option>
+            </select>
+        </div>
+        <div class="form-group">
+          <label for="acc-major">Chuyên ngành</label>
+          <input type="text" id="acc-major" placeholder="VD: Kỹ thuật phần mềm" />
+        </div>
+        <div class="form-group">
+            <label for="acc-website">Website / Portfolio</label>
+            <input type="text" id="acc-website" placeholder="VD: github.com/username" />
+        </div>
+        <div class="form-group form-group-full">
+          <label for="acc-bio">Giới thiệu / Mô tả (Lý lịch)</label>
+          <textarea id="acc-bio" rows="5" placeholder="Viết vài dòng giới thiệu về bản thân..."></textarea>
+        </div>
+      </div>
+      
+      <h2 class="form-section-title">Thông tin cá nhân (Riêng tư)</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="acc-email">Email liên hệ</label>
+          <input type="email" id="acc-email" placeholder="email@hcmut.edu.vn" />
+        </div>
+        <div class="form-group">
+          <label for="acc-phone">Số điện thoại</label>
+          <input type="tel" id="acc-phone" placeholder="Số điện thoại (tùy chọn)" />
+        </div>
+      </div>
+
+      <div class="account-actions">
+        <button type="submit" class="btn-submit">Lưu thay đổi</button>
+        <button id="cancel-account" type="button" class="btn-cancel">Hủy</button>
+      </div>
+    </form>
+  </main>
+
+</body>
+</html>

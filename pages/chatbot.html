@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Chatbot </title>
+    <link rel="stylesheet" href="../style.css/chatbot.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+</head>
+<body>
+    <button id="chatbot-toggler">
+        <span class="material-symbols-rounded">chat</span>
+        <span class="material-symbols-rounded">close</span>
+    </button>
+ <div class="chatbot-popup">
+    <!--hearder-->
+    <div class="chat-header">
+        <div class="header-info">
+            <svg class="chatbot-logo"xmls="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 5.92 2 10.5C2 13.39 4.03 15.91 7 17.11V22L11.11 19.56C11.74 19.78 12.36 19.89 13 19.89C18.52 19.89 23 16.97 23 12.39C23 7.81 18.52 4.89 13 4.89C12.36 4.89 11.74 5 11.11 5.22C10.48 3.34 9.3 2 8 2H12Z" fill="#0b72a8"/>
+            </svg>
+            <h2 class="logo-text">Chatbot</h2>
+        </div>
+            <button id="close-chatbot" class="material-symbols-rounded">keyboard_arrow_down</span>
+        </div>
+    <!--body-->
+    <div class="chat-body">
+        <div class="messages">
+            <svg class="bot-avt" xmls="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 5.92 2 10.5C2 13.39 4.03 15.91 7 17.11V22L11.11 19.56C11.74 19.78 12.36 19.89 13 19.89C18.52 19.89 23 16.97 23 12.39C23 7.81 18.52 4.89 13 4.89C12.36 4.89 11.74 5 11.11 5.22C10.48 3.34 9.3 2 8 2H12Z" fill="#0b72a8"/>
+            </svg>
+            <div class="message-text"> Xin chào! <br />Tôi có thể giúp gì cho bạn.
+            </div>
+        </div>  
+    </div>
+
+<!--footer-->
+    <div class="chat-footer">
+        <form action="#" class="chat-form">
+            <textarea placeholder="Hỏi gì đó..." class="message-input" required></textarea>
+            <div class="chat-controls">
+                <button type="submit" id="send-mess"
+                class="material-symbols-rounded">arrow_upward</button>
+            </div>
+        </form>
+    </div>
+ </div>
+
+ <script src="../script.js/chatbot.js"></script>
+</body>
+</html>

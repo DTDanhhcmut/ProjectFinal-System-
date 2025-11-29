@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng nhập HCMUT_SSO</title>
+  <link rel="stylesheet" href="../style.css/main.css" />
+  <link rel="stylesheet" href="../style.css/login.css" />
+  <script src="../pagesforadmin/datacore.js"></script>
+  <script defer src="../script.js/login.js"></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">
+      <img src="../images/hcmut.png" alt="BK Logo" />
+    </div>
+    <nav class="nav-links">
+      <a href="main.html">Trang chủ</a>
+      <a class="register-link" href="program.html">Đăng kí chương trình</a>
+      <a class="register-link" href="schedule.html">Quản lý lịch</a>
+      <a class="register-link" href="accmanage.html">Quản lý tài khoản</a>
+    </nav>
+    <div class="user-icons">
+      <button class="bell-button" aria-label="Thông báo" title="Thông báo" aria-pressed="false">
+        <svg class="bell-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18.6 14.6V11a6 6 0 1 0-12 0v3.6c0 .538-.214 1.055-.595 1.395L4 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="visually-hidden">Thông báo</span>
+      </button>
+      <button class="avatar-button sso-button" aria-label="HCMUT SSO" title="HCMUT SSO" aria-expanded="false" onclick="window.location.href='role.html'">
+        <span class="sso-box">HCMUT_SSO</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="login-page">
+      <div class="login-container">
+        <h1>Đăng nhập HCMUT_SSO</h1>
+        <p>Nhập thông tin tài khoản HCMUT của bạn để đăng nhập.</p>
+
+        <form id="hcmut-login-form">
+          <label>Tên tài khoản
+            <input id="login-username" name="username" required />
+          </label>
+          <label>Mật khẩu
+            <input id="login-password" name="password" type="password" required />
+          </label>
+          <div style="margin-top:24px; text-align: center;">
+            <button type="submit">Đăng nhập</button>
+            <button id="login-clear-btn" type="button">Xóa</button>
+            <button id="login-cancel-btn" type="button" style="margin-left:12px;padding:10px 14px;border-radius:6px;">Hủy</button>
+          </div>
+        </form>
+        <p style="margin-top:12px;"><a href="#">Thay đổi mật khẩu?</a></p>
+      </div>
+    </div>
+  </main>
+  <script>
+  (function(){
+    const params = new URLSearchParams(location.search);
+    const next = params.get('next') || 'main.html';
+
+    // Hàm điều hướng dựa trên role
+    function getHomePageByRole(role) {
+      const roleHomePages = {
+        'student': 'main.html',
+        'tutor': 'main.html',
+        'pdt': 'main.html',
+        'ctsv': 'main.html',
+        'admin': 'main.html'
+      };
+      return roleHomePages[role] || 'main.html';
+    }
+
+    // On submit, authenticate using datacore.js and save into HCMUT_DATACORE
+    const form = document.getElementById('hcmut-login-form');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const inputUsername = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!inputUsername || !password) {
+        alert('Vui lòng điền đầy đủ thông tin!');
+        return;
+      }
+
+      // Xác thực bằng datacore.js (cho phép nhập email hoặc username không có @hcmut.edu.vn)
+      let authenticatedUser = null;
+      
+      if (window.verifyLogin) {
+        // Thử đăng nhập với inputUsername (có thể là email hoặc username không có @hcmut.edu.vn)
+        authenticatedUser = window.verifyLogin(inputUsername, password);
+      }
+
+      if (!authenticatedUser) {
+        alert('Tên tài khoản hoặc mật khẩu không đúng.');
+        return;
+      }
+
+      const username = authenticatedUser.username; // Đã được xử lý bỏ @hcmut.edu.vn
+      const role = authenticatedUser.role;
+
+      // Save into local "HCMUT_DATACORE" (simulate server DB)
+      try {
+        const db = JSON.parse(localStorage.getItem('HCMUT_DATACORE') || '[]');
+        // upsert by username
+        const existingIndex = db.findIndex(u => u.username === username);
+        const record = { username, role, createdAt: new Date().toISOString() };
+        if (existingIndex >= 0) {
+          db[existingIndex] = Object.assign(db[existingIndex], record);
+        } else {
+          db.push(record);
+        }
+        localStorage.setItem('HCMUT_DATACORE', JSON.stringify(db));
+
+        // mark logged in
+        localStorage.setItem('hcmut_logged_in', 'true');
+        localStorage.setItem('hcmut_role', role);
+        localStorage.setItem('hcmut_username', username);
+        // cleanup pending
+        localStorage.removeItem('hcmut_role_pending');
+
+        // Điều hướng dựa trên role hoặc next parameter
+        let redirectUrl = next;
+        // Nếu next là main.html hoặc không có next, điều hướng theo role
+        if (next === 'main.html' || !params.get('next')) {
+          redirectUrl = getHomePageByRole(role);
+        }
+
+        // redirect
+        location.href = redirectUrl;
+      } catch(err) {
+        alert('Lỗi lưu dữ liệu: ' + err.message);
+      }
+    });
+
+    document.getElementById('login-clear-btn').addEventListener('click', function(){
+      document.getElementById('login-username').value = '';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-username').focus();
+    });
+
+    document.getElementById('login-cancel-btn').addEventListener('click', function(){
+      // go back to signup to choose another method or cancel
+      location.href = 'role.html?next=' + encodeURIComponent(next);
+    });
+  })();
+  </script>
+</body>
+</html>

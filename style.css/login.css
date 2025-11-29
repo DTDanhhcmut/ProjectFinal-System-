@@ -1,0 +1,97 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px); /* Trừ đi chiều cao của navbar */
+  padding: 20px;
+}
+
+.login-container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+
+.login-container h1 {
+  color: #0077b6;
+  margin-bottom: 16px;
+}
+
+.login-container form {
+  text-align: left;
+  margin-top: 24px;
+}
+
+.login-container label {
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.login-container input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  transition: border-color 0.2s;
+}
+
+.login-container input:focus {
+  border-color: #0077b6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 119, 182, 0.2);
+}
+
+.login-container button[type="submit"] {
+  background: #0077b6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.login-container button[type="submit"]:hover {
+  background: #005f92;
+}
+
+#login-clear-btn {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin-left: 12px;
+}
+
+#login-clear-btn:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+/* Thêm responsive cho màn hình nhỏ */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 20px;
+  }
+  
+  .login-container button {
+    width: 100%;
+    margin: 8px 0;
+  }
+  
+  #login-clear-btn {
+    margin-left: 0;
+  }
+}
