@@ -1039,4 +1039,188 @@ if (document.getElementById('tutor-area')) {
   
   console.log('✅ Đã khởi tạo dữ liệu tutor trong HCMUT_DATACORE:', tutorData.length, 'tutor');
 })();
+
+// --- (NOTIFICATION SYSTEM) ---
+const NotificationSystem = {
+  getAll: function () {
+    const username = localStorage.getItem("hcmut_username");
+    if (!username) return [];
+
+    const allNotifs = JSON.parse(
+      localStorage.getItem("hcmut_notifications") || "[]"
+    );
+    return allNotifs.filter((n) => n.username === username).reverse();
+  },
+
+  add: function (title, message, type = "info") {
+    const username = localStorage.getItem("hcmut_username");
+    if (!username) return;
+
+    const allNotifs = JSON.parse(
+      localStorage.getItem("hcmut_notifications") || "[]"
+    );
+
+    const newNotif = {
+      id: Date.now(),
+      username: username,
+      title: title,
+      message: message,
+      type: type,
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    allNotifs.push(newNotif);
+    localStorage.setItem("hcmut_notifications", JSON.stringify(allNotifs));
+    this.render();
+  },
+
+  markAllRead: function () {
+    const username = localStorage.getItem("hcmut_username");
+    const allNotifs = JSON.parse(
+      localStorage.getItem("hcmut_notifications") || "[]"
+    );
+
+    allNotifs.forEach((n) => {
+      if (n.username === username) n.isRead = true;
+    });
+
+    localStorage.setItem("hcmut_notifications", JSON.stringify(allNotifs));
+    this.render();
+  },
+
+  render: function () {
+    const bellBtn = document.querySelector(".bell-button");
+    if (!bellBtn) return;
+
+    let dropdown = document.querySelector(".notification-dropdown");
+    if (!dropdown) {
+      dropdown = document.createElement("div");
+      dropdown.className = "notification-dropdown";
+      document.querySelector(".user-icons").appendChild(dropdown);
+    }
+
+    let badge = bellBtn.querySelector(".notification-badge");
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "notification-badge";
+      bellBtn.appendChild(badge);
+    }
+
+    const notifs = this.getAll();
+    const unreadCount = notifs.filter((n) => !n.isRead).length;
+
+    if (unreadCount > 0) {
+      badge.textContent = unreadCount > 9 ? "9+" : unreadCount;
+      badge.classList.add("show");
+    } else {
+      badge.classList.remove("show");
+    }
+
+    let htmlContent = `
+      <div class="notif-header">
+        <span>Thông báo</span>
+        <button onclick="NotificationSystem.markAllRead()">Đánh dấu đã đọc</button>
+      </div>
+      <div class="notif-list">
+    `;
+
+    if (notifs.length === 0) {
+      htmlContent += `<div class="notif-empty">Bạn chưa có thông báo nào.</div>`;
+    } else {
+      notifs.forEach((n) => {
+        const timeStr = new Date(n.createdAt).toLocaleString("vi-VN");
+        const icon =
+          n.type === "success" ? "✅" : n.type === "warning" ? "⚠️" : "ℹ️";
+        htmlContent += `
+          <div class="notif-item ${n.isRead ? "" : "unread"}">
+            <div class="notif-icon">${icon}</div>
+            <div class="notif-content">
+              <h4>${n.title}</h4>
+<p>${n.message}</p>
+              <div class="notif-time">${timeStr}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+    htmlContent += `</div>`;
+    dropdown.innerHTML = htmlContent;
+  },
+
+  toggle: function () {
+    const dropdown = document.querySelector(".notification-dropdown");
+    if (dropdown) dropdown.classList.toggle("active");
+  },
+
+  checkReminders: function () {
+    const username = localStorage.getItem("hcmut_username");
+    if (!username) return;
+
+    const requests = JSON.parse(localStorage.getItem("tutor_requests") || "[]");
+    const now = new Date();
+
+    requests.forEach((req) => {
+      const isRelated =
+        req.studentUsername === username || req.tutorUsername === username;
+      if (isRelated && req.status === "confirmed") {
+        const createdDate = new Date(req.createdAt);
+        const meetingDate = new Date(createdDate);
+        meetingDate.setDate(createdDate.getDate() + 3);
+
+        const startHour = parseInt(req.timeSlot) + 5;
+        meetingDate.setHours(startHour, 0, 0, 0);
+
+        const diffMs = meetingDate - now;
+        const diffHours = diffMs / (1000 * 60 * 60);
+
+        if (diffHours > 0 && diffHours <= 24) {
+          const notifId = `remind_${req.id}`;
+
+          const allNotifs = this.getAll();
+          const alreadyNotified = allNotifs.some(
+            (n) => n.message.includes(req.subject) && n.type === "warning"
+          );
+
+          if (!alreadyNotified) {
+            this.add(
+              "⏰ Nhắc lịch học",
+              `Bạn có buổi học môn <b>${req.subject}</b> vào lúc ${startHour}:00 ngày mai. Đừng quên nhé!`,
+              "warning"
+            );
+          }
+        }
+      }
+    });
+  },
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  NotificationSystem.render();
+  NotificationSystem.checkReminders();
+
+  const bellBtn = document.querySelector(".bell-button");
+  if (bellBtn) {
+    bellBtn.onclick = (e) => {
+      e.stopPropagation();
+      NotificationSystem.toggle();
+    };
+  }
+
+  document.addEventListener("click", (e) => {
+    const dropdown = document.querySelector(".notification-dropdown");
+    const bellBtn = document.querySelector(".bell-button");
+    if (
+      dropdown &&
+      bellBtn &&
+      !dropdown.contains(e.target) &&
+      !bellBtn.contains(e.target)
+    ) {
+      dropdown.classList.remove("active");
+    }
+  });
+});
+
+window.NotificationSystem = NotificationSystem;
+// --- (END NOTIFICATION SYSTEM) ---
 // -------------------- end Tutor browsing --------------------

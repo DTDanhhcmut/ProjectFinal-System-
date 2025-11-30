@@ -698,6 +698,7 @@ document.getElementById('finalConfirmStudentBookingBtn').onclick = function() {
 
     confirmStudentBookingModal.hide();
     renderStudentView();
+     window.NotificationSystem.add('Đặt lịch thành công', `Yêu cầu đặt lịch lúc ${time} ngày ${date} đã được gửi!`, 'success'); 
 };
 
 let currentConsultationId = null;
@@ -732,6 +733,7 @@ document.getElementById('finalCancelStudentBookingBtn').onclick = function() {
         */
         renderTutorConsultations();
         renderStudentView(); 
+        window.NotificationSystem.add('Đã hủy lịch', 'Bạn đã hủy buổi học thành công.', 'info');
     }
     cancelStudentBookingModal.hide();
     saveScheduleData();
@@ -766,6 +768,7 @@ document.getElementById('finalConfirmConsultationBtn').onclick = function() {
 
         renderTutorConsultations();
         renderStudentView(); 
+        window.NotificationSystem.add('Xác nhận thành công', 'Bạn đã chấp nhận yêu cầu dạy kèm.', 'success');
     }
     saveScheduleData();
     confirmConsultationModal.hide();
@@ -881,7 +884,8 @@ document.getElementById('finalCancelConsultationBtn').onclick = function() {
         tutorAvailabilitySlots.sort((a, b) => a.time.localeCompare(b.time));
         */ 
         renderTutorConsultations();
-        renderStudentView(); 
+        renderStudentView();
+        window.NotificationSystem.add('Đã hủy lịch', 'Bạn đã hủy/từ chối buổi dạy kèm.', 'warning'); 
     }
     saveScheduleData();
     cancelConsultationModal.hide();
@@ -1013,6 +1017,7 @@ window.handleAddTimeSlot = function() {
         date: currentSelectedDate
     };
     tutorAvailabilitySlots.push(newSlot);
+    window.NotificationSystem.add('Thêm giờ rảnh', `Đã thêm khung giờ ${timeSlot} vào lịch.`, 'success');
     saveScheduleData();
     addTimeSlotModal.hide();
     renderTutorAvailability();
